@@ -1,6 +1,7 @@
 <?php
+require('connect.php');
 session_start();
-require('db.php');
+
 $count = '';
 $error = "";
 if (isset($_POST) & !empty($_POST)) {
@@ -12,14 +13,14 @@ if (isset($_POST) & !empty($_POST)) {
    $stmt->execute(array($admin_email, $pass));
 
    $count = $stmt->rowCount();
-   if ($count == 1) {
+   if (!$count == 1) {
       $row = $stmt->fetch(PDO::FETCH_ASSOC);
       $adminid = $row['id'];
-      // var_dump($adminid);
-      $_SESSION['login_user'] =$admin_email;
+      var_dump($adminid);
+      $_SESSION['login_admin'] =$admin_email;
       $_SESSION['admin_id'] = $adminid;
 
-      header("location:showusers.php");
+      header("location:./showusers.php");
    } else {
       $error = "Your Login Email or Password is invalid";
    
@@ -59,12 +60,7 @@ if (isset($_POST) & !empty($_POST)) {
                </div>
 
                   <button class="tm-more-button" type="submit" name="submit">login</button>
-               
-
-               <a href="check-email.php">forgot password? </a>  
-        
-
-
+               <a href="./check-email.php">forgot password? </a>  
          </form>
          <div style = "font-size:11px; color:#cc0000; margin-top:10px">
                   <?php
