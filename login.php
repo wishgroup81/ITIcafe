@@ -26,10 +26,6 @@ if (isset($_POST) & !empty($_POST)) {
 }
 
 ?>
-
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 
