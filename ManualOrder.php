@@ -17,7 +17,6 @@ function calculateTotal(){
   return $total;
 
 }
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -76,7 +75,7 @@ http://www.templatemo.com/tm-466-cafe-house
               </div>
             </div>
             <form  action="confirmOrder.php" method="POST" class="tm-contact-form">
-                <input id="admin_login" type="hidden" name="admin_login" value="<?php $login_id?>">
+                <input id="admin_login" type="hidden" name="admin_login" value="<?php echo $login_id?>">
                 <table id="orderRow" style="width:80%">
                   <?php foreach($orderItems as $item):?>
                    <tr >

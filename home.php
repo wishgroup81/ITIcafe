@@ -1,5 +1,10 @@
 <!--------------------------------------- User Home ------------------------------->
 <?php
+session_start();
+if(isset($_SESSION['userId'])){
+  $login_id= $_SESSION["userId"];
+  $userName= $_SESSION["userName"];
+
 require_once './DB.php';
 
 $products = getProducts();
@@ -15,10 +20,14 @@ function calculateTotal(){
   return $total;
 
 }
-$lastOrderId = getLastUserOrder($login_id);
-$lastOrderProducts = getLastOrderProducts($lastOrderId['id']);
+$lastOrderId = getLastUserOrder(4);
+// var_dump($lastOrderId);die;
+if ($lastOrderId != null ){
 
-    ?>
+  $lastOrderProducts = getLastOrderProducts($lastOrderId['id']);
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -36,7 +45,7 @@ http://www.templatemo.com/tm-466-cafe-house
   <link href="css/font-awesome.min.css" rel="stylesheet">
   <link href="css/templatemo-style.css" rel="stylesheet">
   <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon" />
-  <styl>
+  <style>
     h2,h3{
       display: inline-block;
     }
@@ -57,9 +66,10 @@ http://www.templatemo.com/tm-466-cafe-house
             <nav class="tm-nav">
             
               <ul>
-                <li><a href="home.html" class="active"> Home </a></li>
-                <li><a href=""> My Orders </a></li>
-                <li><a href=" logout.php"> logout</a></li>
+                <li><a href="./home.php" class="active"> Home </a></li>
+                <li><a href="./ibrahim/index.php"> My Orders </a></li>
+                <li><a href="./logout.php"> logout</a></li>
+                <li style="padding-top:15px; padding-left: 50px;">welcome <?= $userName?></li>
               </ul>
             </nav>   
           </div>           
@@ -74,7 +84,7 @@ http://www.templatemo.com/tm-466-cafe-house
           <img src="img/light.png" alt="Light" class="light light-3">  
         </div>        
         <div class="row tm-welcome-content">
-          <h2 class="white-text tm-handwriting-font tm-welcome-header"><img src="img/header-line.png" alt="Line" class="tm-header-line">&nbsp;Welcome,<?php $login_id ?>!&nbsp;&nbsp;<img src="img/header-line.png" alt="Line" class="tm-header-line"></h2>
+          <h2 class="white-text tm-handwriting-font tm-welcome-header"><img src="img/header-line.png" alt="Line" class="tm-header-line">&nbsp;Welcome,<?php echo $userName ?>!&nbsp;&nbsp;<img src="img/header-line.png" alt="Line" class="tm-header-line"></h2>
           <h2 class="gold-text tm-welcome-header-2">Cafe House</h2>
           <p class="gray-text tm-welcome-description">Cafe House template is a <span class="gold-text">mobile-friendly</span> responsive Bootstrap v3.3.5 layout by <span class="gold-text">templatemo</span>. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculusnec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.</p>
           <a href="#main" class="tm-more-button tm-more-button-welcome">Read More</a>      
@@ -95,7 +105,10 @@ http://www.templatemo.com/tm-466-cafe-house
             </div>
           </div>
           <div class=" col-lg-12 tm-popular-items-container" style="justify-content:flex-start;margin-bottom: -52px">
-            <?php foreach($lastOrderProducts as $product): ?>
+            <?php 
+              if ($lastOrderId != null ){
+            foreach($lastOrderProducts as $product):
+             ?>
           <div class="">
               <img src="<?php echo $product['img'];?>" alt="Popular" class="tm-popular-item-img">
               <div class="tm-popular-item-description">
@@ -105,7 +118,9 @@ http://www.templatemo.com/tm-466-cafe-house
                
               </div>
             </div>
-           <?php endforeach ?>
+           <?php endforeach;};
+            
+       ?>
           </div>
         </section>
       
@@ -119,13 +134,14 @@ http://www.templatemo.com/tm-466-cafe-house
               </div>
             </div>
             <form  action="confirmOrder.php" method="POST" class="tm-contact-form">
-                <input id="user_login" type="hidden" name="user_login" value="<?php $login_id?>">
+                <input id="user_login" type="hidden" name="user_login" value="<?= $login_id?>">
                 <table id="orderRow" style="width:80%">
                   <?php foreach($orderItems as $item):?>
                    <tr >
                   <td> 
                    <h2>
-                   <?php echo $item['name']?> </h2>
+                   <?php echo $item['name']?>
+                   </h2>
                   </td>
                    <td>
                       <div class="form-group" style="width:40px ;display:inline-block;">
@@ -176,34 +192,42 @@ http://www.templatemo.com/tm-466-cafe-house
           <!-- ///////////////////// products ////////////////////// -->
           
         <div class="col-lg-6">
-          <div class="tm-section-header-container">
-            <h2 class="tm-section-header gold-text tm-handwriting-font"><img src="img/logo.png" alt="Logo" class="tm-site-logo">Menu</h2>
-            <div class="tm-hr-container "><hr class="tm-hr "></div>
-          </div>
-            <section>
-        </section>
-          <div class=" tm-popular-items-container">
-            <div >
-             
-                <?php foreach($products as $product): ?>
-                <h4><?php echo $product['name']?></h4>
-                  <button class="img-circle select-product" data-product-id="<?php echo $product['id']?>" style="border:0px;">
-                  <img src="<?php echo $product['img'];?>" class="img-circle" style="width:100px;height:100px" ></button>
-                   <h4><?php echo $product['price']?></h4>
-                    <?php endforeach ;?>
-          </div> 
-          </div>
-            
-        </div>
-    </section>
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="tm-section-header-container">
+                <h2 class="tm-section-header gold-text tm-handwriting-font"><img src="img/logo.png" alt="Logo" class="tm-site-logo">Menu</h2>
+                <div class="tm-hr-container "><hr class="tm-hr "></div>
+              </div>
 
-   
-  
+              <div class=" tm-popular-items-container">
+                <div class="products">
+                    <?php foreach($products as $product): ?>
+                      <div class="col-lg-6">
+                        <h4><?php echo $product['name']?></h4>
+                        <button class="img-circle select-product"
+                          data-product-id="<?php echo $product['id']?>" 
+                          style="border:0px;">
+                          <img src="<?php echo $product['img'];?>" 
+                          class="img-circle" style="width:100px;height:100px" >
+                        </button>
+                        <h4>price <?php echo $product['price']?>$</h4>
+                       </div>
+                        <?php endforeach ;?>
+              </div> 
+              </div>
+            </div>
+        </div>
+      </div>
+    </section>
    <!-- JS -->
    <script src="js/makeOrder.js"></script>
- 
    <script type="text/javascript" src="js/jquery-1.11.2.min.js"></script> <!-- jQuery -->
    <script type="text/javascript" src="js/templatemo-script.js"></script><!-- Templatemo Script -->
-
  </body>
  </html>
+ <?php 
+}
+else {
+  header("location:index.php");
+}
+ ?>
