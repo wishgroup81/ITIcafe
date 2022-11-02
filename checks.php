@@ -3,24 +3,42 @@ require_once './checksDb.php';
 
 
 
+//===========get all orders without filteration=============
+if(empty($_GET)){
 
-$dorders=getAllOrderss(); 
-
-if(isset($_REQUEST['from'])){
-
-  $orders=getAllOrders($_REQUEST['from'],$_REQUEST['to']); 
+  $sumname=getAllOrders();
 }
-if (isset($_REQUEST['id'])){
-  $allOrders=getdOrdersForUser();
+//===========filter orders by date=============
+
+if(isset($_REQUEST['from'])&&isset($_REQUEST['User'])&&$_REQUEST['User']=="All"){
+
+  $filteredOrders=filterOrdersFromTo($_REQUEST['from'],$_REQUEST['to']); 
+}
+//===========filter orders by date and specific user=============
+if (isset($_REQUEST['User'])&&$_REQUEST['User']!="All") {
+  
+  $allOrders=filterOrderByIDFromTo($_REQUEST['from'],$_REQUEST['to'],$_REQUEST['User']);
+  
+  $sumname=getSubNameUser($_REQUEST['User']);
+}
+//===========display orders for user when I click=============
+
+if (isset($_REQUEST['id'])&& !isset($_REQUEST['from'])){
+  $allOrders=getOrderByID($_REQUEST['id']);
+  
+  $sumname=getSubName($_REQUEST['id']);
   
 }
+//get order products
+if (isset($_REQUEST['order_id'])){
+  $allOrderproducts=getOrderproduct($_REQUEST['order_id']);
+  // var_dump($allOrderproducts);
+}
+//===========display orders for user when I click with filteration=============
 if (isset($_REQUEST['id'])&& isset($_REQUEST['from'])){
-  $allOrders=getOrdersForUser($_REQUEST['from'],$_REQUEST['to']);
-  
-}
-if (isset($_REQUEST['User'])) {
-  $orders=getOrdersForUser($_REQUEST['from'],$_REQUEST['to'],$_REQUEST['User']);
-  
+  $allOrders=getOrdersForUser($_REQUEST['from'],$_REQUEST['to'],$_REQUEST['id']);
+    // var_dump($allOrders);
+
 }
 ?>
 
@@ -35,7 +53,7 @@ if (isset($_REQUEST['User'])) {
 Cafe House Template
 http://www.templatemo.com/tm-466-cafe-house
 -->
-<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,400italic,600,700' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,400italic,600,700' rel='stylesheet' type='text/css'>
   <link href='http://fonts.googleapis.com/css?family=Damion' rel='stylesheet' type='text/css'>
   <link href="css/bootstrap.min.css" rel="stylesheet">
   <link href="css/font-awesome.min.css" rel="stylesheet">
@@ -67,7 +85,7 @@ http://www.templatemo.com/tm-466-cafe-house
               <ul>
                 <li><a href="index.html">Home</a></li>
                 <li><a href="today-special.html">Today Special</a></li>
-                <li><a href="menu.html" class="active">Checks</a></li>
+                <li><a href="ckecks.php" class="active">Checks</a></li>
                 <li><a href="contact.html">Contact</a></li>
               </ul>
             </nav>   
@@ -88,63 +106,74 @@ http://www.templatemo.com/tm-466-cafe-house
     <div class="tm-main-section light-gray-bg">
       <div class="container" id="main">
                  
-        <section class="tm-section row">
-          <div class="col-lg-12 tm-section-header-container margin-bottom-30">
-            <h2 class="tm-section-header gold-text tm-handwriting-font"><img src="img/logo.png" alt="Logo" class="tm-site-logo"> Checks</h2>
-            <div class="tm-hr-container"><hr class="tm-hr"></div>
-          </div>
-          <div>
-          <form action="menu.php">
-    <label for="from">From:</label>
-    <input type="date" id="from" name="from">
+    <section class="tm-section row">
+        <div class="col-lg-12 tm-section-header-container margin-bottom-30">
+          <h2 class="tm-section-header gold-text tm-handwriting-font"><img src="img/logo.png" alt="Logo" class="tm-site-logo"> Checks</h2>
+          <div class="tm-hr-container"><hr class="tm-hr"></div>
+         </div>
+         <div>
+          <form action="checks.php">
+              <label for="from">From:</label>
+              <input type="date" id="from" name="from" value="<?php 
+              if (isset($_REQUEST['from'])) {
+                echo $_REQUEST['from'];
+              }
+              ?>">
   
-    <label for="to">To:</label>
-    <input type="date" id="to" name="to">
-
-    <label>User</label>
-        <select name="User">
-           <option>All</option>
-           <?php  if(isset($orders)){foreach($orders as $order): ?>
-
-           <option value="<?php  echo $order['id']?>" ><?php echo $order['name']; ?></option>
-           <?php endforeach; }?>
-        </select>
+              <label for="to">To:</label>
+              <input type="date" id="to" name="to" value="<?php 
+              if (isset($_REQUEST['to'])) {
+                echo $_REQUEST['to'];
+              }?>">
+    
+              <label>User</label>
+              <select name="User" value="<?php 
+              if (isset($_REQUEST['User'])) {
+              echo $_REQUEST['User'];} ?>">
+              <option>All</option>
+              <?php  if(isset($sumname))
+              {foreach($sumname as $order): ?>
+              <option value="<?php echo $order['id']; ?>"><?php echo $order['name']; ?></option>
+              <?php endforeach; }?>
+              </select>
         
-    <input type="submit">
-    <br><br>
-  </form>
-  </div>
-          <div>
-            <div class="col-lg-3 col-md-3">
-              <div class="tm-position-relative margin-bottom-30">  
-                
-                <table class="table">
-                  <thead>
-                    <tr>
-                      <th scope="col">Users</th>
-                      <th scope="col">Total amount</th>
-                    </tr>
-                  </thead>
-          
-                  <?php  if(isset($orders)){foreach($orders as $order): ?>
-                  <tbody>
-                    <tr>
+              <input type="submit">
+              <br><br>
+          </form>
+        </div>
+        <div>
+          <div class="col-lg-3 col-md-3">
+          <div class="tm-position-relative margin-bottom-30">  
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">Users</th>
+                  <th scope="col">Total amount</th>
+                </tr>
+              </thead>   
 
-                      <td><a href="http://localhost/cafteria/checks.php?from=<?php echo $_REQUEST['from'] ?>&to=<?php echo $_REQUEST['to'] ?>&id=<?php echo $order['user_id'] ?>"> "<?php
+              <!-- display all orders with filteration -->
+           
+                  <?php  if(isset($filteredOrders)){foreach($filteredOrders as $order): ?>
+              <tbody>
+                    <tr>
+                      <td><a href="http://localhost/iticafe/checks.php?from=<?php echo $_REQUEST['from'] ?>&to=<?php echo $_REQUEST['to'] ?>&id=<?php echo $order['user_id'] ?>"> "<?php
                        echo $order['name']; ?>" </a></td>
                       <td>"<?php 
-                        echo $order['total']; ?>"</td>
+                        echo $order['summ']; ?>"</td>
                       
                     </tr>
                     <?php endforeach; }?>
-                    <?php  if(isset($dorders)){foreach($dorders as $dorder): ?>
+                    <!-- display all orders without filteration -->
+                    <?php  if(isset($sumname)){foreach($sumname as $order): ?>
                   <tbody>
                     <tr>
 
-                      <td><a href="http://localhost/cafteria/checks.php?id=<?php echo $dorder['user_id'] ?>"> "<?php
-                       echo $dorder['name']; ?>" </a></td>
+                      <td><a href="http://localhost/iticafe/checks.php?id=<?php echo $order['user_id'] ?>"> "<?php
+                       echo $order['name']; ?>" </a></td>
                       <td>"<?php 
-                        echo $dorder['total']; ?>"</td>
+                      
+                      echo $order['sum'];  ?>"</td>
                       
                     </tr>
                     <?php endforeach; }?>
@@ -163,16 +192,54 @@ http://www.templatemo.com/tm-466-cafe-house
               </tr>
             </thead>
             <tbody>
-            <?php  if(isset($_REQUEST['id'])){foreach($allOrders as $allOrder): ?>
+            <?php  if(isset($_REQUEST['id']))  {foreach($allOrders as $allOrder): ?>
+              <tr>
+              <td><a href="http://localhost/iticafe/checks.php?order_id=<?php echo $allOrder['order_id'] ?>&id=<?php echo $_REQUEST['id'] ?>" ><?php
+                ?></a></td>
+               <td><?php if ($allOrder['user_id']==$_REQUEST['id']) {
+                 echo $allOrder['total'];
+               } ?></td>
+                
+              </tr>
+              <?php endforeach; }?>
+              <!-- filter by date and user -->
+              <?php  if(isset($_REQUEST['User'])&&$_REQUEST['User']!="All"){foreach($allOrders as $allOrder): ?>
+
+              <tr>
+  
+               <td><a href="http://localhost/iticafe/checks.php?order_id=<?php echo $allOrder['order_id'] ?>&User=<?php echo $_REQUEST['User'] ?>" ><?php if ($allOrder['user_id']==$_REQUEST['User']) {
+                 echo $allOrder['created_at'];
+               } ?></a></td>
+               <td><?php if ($allOrder['user_id']==$_REQUEST['User']) {
+                 echo $allOrder['total'];
+               } ?></td>
+               
+             </tr>
+             <?php endforeach; }?>
+             
+              
+            </tbody>
+          </table>  
+          </div>        
+        </section>
+      </div>
+    </div> 
+    <div class="tm-product">
+              <h2 class="tm-section-header gold-text tm-handwriting-font">The order</h2>
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Product Image</th>
+                <th scope="col">Price</th>
+              </tr>
+            </thead>
+            <tbody>
+            <?php  if(isset($_REQUEST['order_id'])){foreach($allOrderproducts as $allOrder): ?>
 
               <tr>
                 
-                <td><?php if ($allOrder['user_id']==$_REQUEST['id']) {
-                  echo $allOrder['created_at'];
-                } ?></td>
-                <td><?php if ($allOrder['user_id']==$_REQUEST['id']) {
-                  echo $allOrder['total'];
-                } ?></td>
+                <td><img src="<?php  echo $allOrder['img']; ?>" width="100" height="100"></td>
+                <td><?php  echo $allOrder['price']; ?></a></td>
                 
               </tr>
               <?php endforeach; }?>
@@ -225,7 +292,7 @@ http://www.templatemo.com/tm-466-cafe-house
      </div>
    </footer> <!-- Footer content-->  
    <!-- JS -->
-   <script type="text/javascript" src="js/jquery-1.11.2.min.js"></script>      j
+   <script type="text/javascript" src="js/jquery-1.11.2.min.js"></script>      
    <script type="text/javascript" src="js/templatemo-script.js"></script>      <!-- Templatemo Script -->
    
  </body>
