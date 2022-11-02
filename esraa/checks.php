@@ -1,4 +1,6 @@
 <?php
+session_start();
+if (isset($_SESSION["adminId"])) {
 require_once './checksDb.php';
 
 
@@ -23,7 +25,7 @@ if (isset($_REQUEST['User'])&&$_REQUEST['User']!="All") {
 }
 //===========display orders for user when I click=============
 
-if (isset($_REQUEST['id'])&& !isset($_REQUEST['from'])){
+if (isset($_REQUEST['id'])){
   $allOrders=getOrderByID($_REQUEST['id']);
   
   $sumname=getSubName($_REQUEST['id']);
@@ -32,13 +34,11 @@ if (isset($_REQUEST['id'])&& !isset($_REQUEST['from'])){
 //get order products
 if (isset($_REQUEST['order_id'])){
   $allOrderproducts=getOrderproduct($_REQUEST['order_id']);
-  // var_dump($allOrderproducts);
 }
 //===========display orders for user when I click with filteration=============
 if (isset($_REQUEST['id'])&& isset($_REQUEST['from'])){
-  $allOrders=getOrdersForUser($_REQUEST['from'],$_REQUEST['to'],$_REQUEST['id']);
-    // var_dump($allOrders);
-
+  $allOrders=getOrdersForUser($_REQUEST['from'],$_REQUEST['to']);
+  
 }
 ?>
 
@@ -75,7 +75,7 @@ http://www.templatemo.com/tm-466-cafe-house
         <div class="row">
           <div class="tm-top-header-inner">
             <div class="tm-logo-container">
-              <img src="img/logo.png" alt="Logo" class="tm-site-logo">
+              <img src="../img/logo.png" alt="Logo" class="tm-site-logo">
               <h1 class="tm-site-name tm-handwriting-font">Cafe House</h1>
             </div>
             <div class="mobile-menu-icon">
@@ -83,10 +83,9 @@ http://www.templatemo.com/tm-466-cafe-house
             </div>
             <nav class="tm-nav">
               <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="today-special.html">Today Special</a></li>
+                <li><a href="../showusers.php">Home</a></li>
                 <li><a href="ckecks.php" class="active">Checks</a></li>
-                <li><a href="contact.html">Contact</a></li>
+                <li><a href="../logout.php">logout</a></li>
               </ul>
             </nav>   
           </div>           
@@ -96,9 +95,9 @@ http://www.templatemo.com/tm-466-cafe-house
     <section class="tm-welcome-section">
       <div class="container tm-position-relative">
         <div class="tm-lights-container">
-          <img src="img/light.png" alt="Light" class="light light-1">
-          <img src="img/light.png" alt="Light" class="light light-2">
-          <img src="img/light.png" alt="Light" class="light light-3">  
+          <img src="../img/light.png" alt="Light" class="light light-1">
+          <img src="../img/light.png" alt="Light" class="light light-2">
+          <img src="../img/light.png" alt="Light" class="light light-3">  
         </div>        
         
     </section>
@@ -108,11 +107,11 @@ http://www.templatemo.com/tm-466-cafe-house
                  
     <section class="tm-section row">
         <div class="col-lg-12 tm-section-header-container margin-bottom-30">
-          <h2 class="tm-section-header gold-text tm-handwriting-font"><img src="img/logo.png" alt="Logo" class="tm-site-logo"> Checks</h2>
+          <h2 class="tm-section-header gold-text tm-handwriting-font"><img src="../img/logo.png"  alt="Logo" class="tm-site-logo"> Checks</h2>
           <div class="tm-hr-container"><hr class="tm-hr"></div>
          </div>
          <div>
-          <form action="checks.php">
+          <form action="">
               <label for="from">From:</label>
               <input type="date" id="from" name="from" value="<?php 
               if (isset($_REQUEST['from'])) {
@@ -157,7 +156,7 @@ http://www.templatemo.com/tm-466-cafe-house
                   <?php  if(isset($filteredOrders)){foreach($filteredOrders as $order): ?>
               <tbody>
                     <tr>
-                      <td><a href="http://localhost/iticafe/checks.php?from=<?php echo $_REQUEST['from'] ?>&to=<?php echo $_REQUEST['to'] ?>&id=<?php echo $order['user_id'] ?>"> "<?php
+                      <td><a href="http://localhost/esraa/checks.php?from=<?php echo $_REQUEST['from'] ?>&to=<?php echo $_REQUEST['to'] ?>&id=<?php echo $order['user_id'] ?>"> "<?php
                        echo $order['name']; ?>" </a></td>
                       <td>"<?php 
                         echo $order['summ']; ?>"</td>
@@ -169,7 +168,7 @@ http://www.templatemo.com/tm-466-cafe-house
                   <tbody>
                     <tr>
 
-                      <td><a href="http://localhost/iticafe/checks.php?id=<?php echo $order['user_id'] ?>"> "<?php
+                      <td><a href="http://localhost/esraa/checks.php?id=<?php echo $order['user_id'] ?>"> "<?php
                        echo $order['name']; ?>" </a></td>
                       <td>"<?php 
                       
@@ -192,13 +191,16 @@ http://www.templatemo.com/tm-466-cafe-house
               </tr>
             </thead>
             <tbody>
-            <?php  if(isset($_REQUEST['id']))  {foreach($allOrders as $allOrder): ?>
+            <?php  if(isset($_REQUEST['id'])){foreach($allOrders as $allOrder): ?>
+
               <tr>
-              <td><a href="http://localhost/iticafe/checks.php?order_id=<?php echo $allOrder['order_id'] ?>&id=<?php echo $_REQUEST['id'] ?>" ><?php
-                ?></a></td>
-               <td><?php if ($allOrder['user_id']==$_REQUEST['id']) {
-                 echo $allOrder['total'];
-               } ?></td>
+                
+                <td><a  href="http://localhost/esraa/checks.php?order_id=<?php echo $allOrder['order_id'] ?>&id=<?php echo $_REQUEST['id'] ?>"> <?php if ($allOrder['user_id'] == $_REQUEST['id']) {
+                  echo $allOrder['created_at'];
+                } ?></td>
+                <td><?php if ($allOrder['user_id']==$_REQUEST['id']) {
+                  echo $allOrder['total'];
+                } ?></a></td>
                 
               </tr>
               <?php endforeach; }?>
@@ -207,7 +209,7 @@ http://www.templatemo.com/tm-466-cafe-house
 
               <tr>
   
-               <td><a href="http://localhost/iticafe/checks.php?order_id=<?php echo $allOrder['order_id'] ?>&User=<?php echo $_REQUEST['User'] ?>" ><?php if ($allOrder['user_id']==$_REQUEST['User']) {
+               <td><a href="http://localhost/esraa/checks.php?order_id=<?php echo $allOrder['order_id'] ?>&User=<?php echo $_REQUEST['User'] ?>" ><?php if ($allOrder['user_id']==$_REQUEST['User']) {
                  echo $allOrder['created_at'];
                } ?></a></td>
                <td><?php if ($allOrder['user_id']==$_REQUEST['User']) {
@@ -238,7 +240,7 @@ http://www.templatemo.com/tm-466-cafe-house
 
               <tr>
                 
-                <td><img src="<?php  echo $allOrder['img']; ?>" width="100" height="100"></td>
+                <td><img src="../<?php  echo $allOrder['img']; ?>" width="100" height="100"></td>
                 <td><?php  echo $allOrder['price']; ?></a></td>
                 
               </tr>
@@ -292,8 +294,16 @@ http://www.templatemo.com/tm-466-cafe-house
      </div>
    </footer> <!-- Footer content-->  
    <!-- JS -->
-   <script type="text/javascript" src="js/jquery-1.11.2.min.js"></script>      
-   <script type="text/javascript" src="js/templatemo-script.js"></script>      <!-- Templatemo Script -->
+   <script type="text/javascript" src="../js/jquery-1.11.2.min.js"></script>      
+   <script type="text/javascript" src="../js/templatemo-script.js"></script>      <!-- Templatemo Script -->
    
  </body>
  </html>
+
+ <?php 
+}
+else {
+  header("location:../adminlogin.php");
+}
+ 
+ ?>

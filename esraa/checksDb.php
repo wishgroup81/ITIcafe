@@ -1,6 +1,7 @@
 <?php
-     $db = "mysql:host=localhost;dbname=cafetaria";
-      $con = new PDO($db,'root','');
+  
+     $db = "mysql:host=localhost;dbname=proj";
+      $con = new PDO($db,'root','01503303994');
 //===========get all orders without filteration=============
 
       function getAllOrders()
@@ -76,13 +77,12 @@
       
     }
     //===========display orders for user when I click=============
-    function getOrdersForUser($from, $to,$id)
+    function getOrdersForUser($from, $to)
     {
       global $con;
-        $query = "SELECT DISTINCT *	
-        FROM `orders` as o,`users` AS u,orderproduct op where o.user_id =u.id and o.user_id=$id 
+        $query = "SELECT *	
+        FROM `orders` as o,`users` AS u, `orderproduct` AS op where o.user_id =u.id
         and o.created_at BETWEEN '$from' AND '$to'
-        GROUP by o.total
         ";
          $sql = $con->prepare($query);
          $sql->execute();
@@ -99,3 +99,4 @@
          $sql->execute();
          return $sql->fetchAll(PDO::FETCH_ASSOC);
    }
+  
