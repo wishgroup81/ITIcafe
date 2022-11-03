@@ -1,7 +1,7 @@
 <?php
   
-     $db = "mysql:host=localhost;dbname=proj";
-      $con = new PDO($db,'root','01503303994');
+     $db = "mysql:host=localhost;dbname=cafetaria";
+      $con = new PDO($db,'root','');
 //===========get all orders without filteration=============
 
       function getAllOrders()
@@ -44,7 +44,7 @@
          return $sql->fetchAll(PDO::FETCH_ASSOC);
         
     }
-    function getSubNameUser($user)
+    function getSumNameUser($user)
     {
       global $con;
       $query = "SELECT sum(total) as sum,u.name ,o.id as order_id,o.user_id ,o.created_at ,u.id , u.admin_id,o.total
@@ -67,7 +67,7 @@
          return $sql->fetchAll(PDO::FETCH_ASSOC);
         
     }
-    function getSubName($id)
+    function getSumName($id)
     {
       global $con;
       $query = "SELECT sum(total) as sum,u.name ,o.id as order_id,o.user_id ,o.created_at ,u.id , u.admin_id,o.total FROM `orders` as o,`users` AS u where o.user_id=u.id AND o.user_id=$id";
@@ -80,9 +80,10 @@
     function getOrdersForUser($from, $to)
     {
       global $con;
-        $query = "SELECT *	
+        $query = "SELECT DISTINCT *	
         FROM `orders` as o,`users` AS u, `orderproduct` AS op where o.user_id =u.id
         and o.created_at BETWEEN '$from' AND '$to'
+        group by o.created_at
         ";
          $sql = $con->prepare($query);
          $sql->execute();

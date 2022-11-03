@@ -17,18 +17,18 @@ if(isset($_REQUEST['from'])&&isset($_REQUEST['User'])&&$_REQUEST['User']=="All")
   $filteredOrders=filterOrdersFromTo($_REQUEST['from'],$_REQUEST['to']); 
 }
 //===========filter orders by date and specific user=============
-if (isset($_REQUEST['User'])&&$_REQUEST['User']!="All") {
+if (isset($_REQUEST['User'])&&isset($_REQUEST['from'])&&$_REQUEST['User']!="All") {
   
   $allOrders=filterOrderByIDFromTo($_REQUEST['from'],$_REQUEST['to'],$_REQUEST['User']);
   
-  $sumname=getSubNameUser($_REQUEST['User']);
+  $sumname=getSumNameUser($_REQUEST['User']);
 }
 //===========display orders for user when I click=============
 
 if (isset($_REQUEST['id'])){
   $allOrders=getOrderByID($_REQUEST['id']);
   
-  $sumname=getSubName($_REQUEST['id']);
+  $sumname=getSumName($_REQUEST['id']);
   
 }
 //get order products
@@ -128,7 +128,10 @@ http://www.templatemo.com/tm-466-cafe-house
               <label>User</label>
               <select name="User" value="<?php 
               if (isset($_REQUEST['User'])) {
-              echo $_REQUEST['User'];} ?>">
+              echo $_REQUEST['User'];} 
+              if (isset($_REQUEST['id'])) {
+                echo $_REQUEST['id'];} ?>">
+              
               <option>All</option>
               <?php  if(isset($sumname))
               {foreach($sumname as $order): ?>
@@ -139,6 +142,7 @@ http://www.templatemo.com/tm-466-cafe-house
               <input type="submit">
               <br><br>
           </form>
+          <br><br>
         </div>
         <div>
           <div class="col-lg-3 col-md-3">
@@ -156,10 +160,10 @@ http://www.templatemo.com/tm-466-cafe-house
                   <?php  if(isset($filteredOrders)){foreach($filteredOrders as $order): ?>
               <tbody>
                     <tr>
-                      <td><a href="http://localhost/esraa/checks.php?from=<?php echo $_REQUEST['from'] ?>&to=<?php echo $_REQUEST['to'] ?>&id=<?php echo $order['user_id'] ?>"> "<?php
-                       echo $order['name']; ?>" </a></td>
-                      <td>"<?php 
-                        echo $order['summ']; ?>"</td>
+                      <td><a href="http://localhost/ITIcafe/esraa/checks.php?from=<?php echo $_REQUEST['from'] ?>&to=<?php echo $_REQUEST['to'] ?>&id=<?php echo $order['user_id'] ?>">
+
+                         <?php echo $order['name']; ?> </a></td>
+                      <td><?php echo $order['summ']; ?></td>
                       
                     </tr>
                     <?php endforeach; }?>
@@ -168,7 +172,7 @@ http://www.templatemo.com/tm-466-cafe-house
                   <tbody>
                     <tr>
 
-                      <td><a href="http://localhost/esraa/checks.php?id=<?php echo $order['user_id'] ?>"> "<?php
+                      <td><a href="http://localhost/ITIcafe/esraa/checks.php?id=<?php echo $order['user_id'] ?>"> "<?php
                        echo $order['name']; ?>" </a></td>
                       <td>"<?php 
                       
@@ -191,11 +195,24 @@ http://www.templatemo.com/tm-466-cafe-house
               </tr>
             </thead>
             <tbody>
-            <?php  if(isset($_REQUEST['id'])){foreach($allOrders as $allOrder): ?>
+            <?php  if(isset($_REQUEST['id'])&&isset($_REQUEST['from'])){foreach($allOrders as $allOrder): ?>
 
               <tr>
                 
-                <td><a  href="http://localhost/esraa/checks.php?order_id=<?php echo $allOrder['order_id'] ?>&id=<?php echo $_REQUEST['id'] ?>"> <?php if ($allOrder['user_id'] == $_REQUEST['id']) {
+                <td><a  href="http://localhost/ITIcafe/esraa/checks.php?from=<?php echo $_REQUEST['from'] ?>&to=<?php echo $_REQUEST['to'] ?>&order_id=<?php echo $allOrder['order_id'] ?>&id=<?php echo $_REQUEST['id'] ?>"> <?php if ($allOrder['user_id'] == $_REQUEST['id']) {
+                  echo $allOrder['created_at'];
+                } ?></td>
+                <td><?php if ($allOrder['user_id']==$_REQUEST['id']) {
+                  echo $allOrder['total'];
+                } ?></a></td>
+                
+              </tr>
+              <?php endforeach; }?>
+              <?php  if(isset($_REQUEST['id'])&& !isset($_REQUEST['from'])){foreach($allOrders as $allOrder): ?>
+
+              <tr>
+                
+                <td><a  href="http://localhost/ITIcafe/esraa/checks.php?&order_id=<?php echo $allOrder['order_id'] ?>&id=<?php echo $_REQUEST['id'] ?>"> <?php if ($allOrder['user_id'] == $_REQUEST['id']) {
                   echo $allOrder['created_at'];
                 } ?></td>
                 <td><?php if ($allOrder['user_id']==$_REQUEST['id']) {
@@ -209,7 +226,7 @@ http://www.templatemo.com/tm-466-cafe-house
 
               <tr>
   
-               <td><a href="http://localhost/esraa/checks.php?order_id=<?php echo $allOrder['order_id'] ?>&User=<?php echo $_REQUEST['User'] ?>" ><?php if ($allOrder['user_id']==$_REQUEST['User']) {
+               <td><a href="http://localhost/ITIcafe/esraa/checks.php?from=<?php echo $_REQUEST['from'] ?>&to=<?php echo $_REQUEST['to'] ?>&order_id=<?php echo $allOrder['order_id'] ?>&User=<?php echo $_REQUEST['User'] ?>" ><?php if ($allOrder['user_id']==$_REQUEST['User']) {
                  echo $allOrder['created_at'];
                } ?></a></td>
                <td><?php if ($allOrder['user_id']==$_REQUEST['User']) {
@@ -299,11 +316,10 @@ http://www.templatemo.com/tm-466-cafe-house
    
  </body>
  </html>
-
  <?php 
 }
 else {
   header("location:../adminlogin.php");
 }
- 
+
  ?>
