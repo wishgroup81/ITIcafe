@@ -1,5 +1,5 @@
 <?php
-include ('./connect.php');
+include ('./connecion.php');
 if(isset($_POST['update'])){
     $userid = $_POST['userid'];
     $name = $_POST['name'];
@@ -11,7 +11,7 @@ if(isset($_POST['update'])){
         SET name=:name , img=:img , number=:number , ext=:ext 
         WHERE users.id=:userid 
         AND room_id = rooms.id";
-        $statement = $connect->prepare($query);
+        $statement = $con->prepare($query);
         $data = [
             ':name'=>$name,
             ':number'=>$number,
