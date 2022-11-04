@@ -3,7 +3,7 @@ order.forEach(btn=> btn.addEventListener('click',cancelProduct));
 
 function cancelProduct () {
     const id = this.dataset.id;
-    fetch(`http://localhost/ibrahim/cancel.php?id=${id}`)
+    fetch(`http://localhost/ITIcafe/ibrahim/cancel.php?id=${id}`)
     .then((res) => res.json)
     .then((data) => {
         if(data) {

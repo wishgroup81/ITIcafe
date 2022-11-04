@@ -3,13 +3,13 @@ let user_login = document.getElementById("user_login").value;
 
 let orderRow = document.getElementById("orderRow");
 let image_btns = document.querySelectorAll(".select-product");
-
+console.log(user_login);
 if(user_login){
 image_btns.forEach((btn) => btn.addEventListener("click", selectProduct));
 function selectProduct() {
   const id = this.dataset.productId;
  
-  fetch(`http://localhost/makeOrder.php?product-id=${id}&user-id=${user_login}`)
+  fetch(`http://localhost/ITIcafe/makeOrder.php?product-id=${id}&user-id=${user_login}`)
     .then((data) => {
       if (data) {
         console.log(id);
@@ -24,7 +24,7 @@ else if(admin_login){
 image_btns.forEach((btn) => btn.addEventListener("click", selectProduct));
 function selectProduct() {
   const id = this.dataset.productId;
-  fetch(`http://localhost/adminmakeOrder.php?product-id=${id}&admin-id=${admin_login}`)
+  fetch(`http://localhost/ITIcafe/adminmakeOrder.php?product-id=${id}&admin-id=${admin_login}`)
     .then((data) => {
       if (data) {
         window.location.reload();
@@ -38,7 +38,7 @@ cancel_btns.forEach((btn) => btn.addEventListener("click", cancelProduct));
 function cancelProduct() {
   const id = this.dataset.cancelId;
   console.log(id);
-  fetch(`http://localhost/makeOrder.php?cancel-id=${id}`).then(
+  fetch(`http://localhost/ITIcafe/makeOrder.php?cancel-id=${id}`).then(
     (data) => {
       if (data) {
         let btn = document.querySelector(`button[data-cancel-id='${id}']`);
@@ -53,7 +53,7 @@ increase_btns.forEach((btn) => btn.addEventListener("click", increaseAmount));
 function increaseAmount() {
   const id = this.dataset.increaseId;
 
-  fetch(`http://localhost/makeOrder.php?increase-id=${id}`).then(
+  fetch(`http://localhost/ITIcafe/makeOrder.php?increase-id=${id}`).then(
     (data) => {
       if (data) {
         let btn = document.querySelector(`button[data-increase-id='${id}']`);
@@ -81,7 +81,7 @@ function decreaseAmount() {
   const id = this.dataset.decreaseId;
 
   fetch(
-    `http://localhost/makeOrder.php?decrease-id=${id}&amount=`
+    `http://localhost/ITIcafe/makeOrder.php?decrease-id=${id}&amount=`
   ).then((data) => {
     if (data) {
       let btn = document.querySelector(`button[data-decrease-id='${id}']`);

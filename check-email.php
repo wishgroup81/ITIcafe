@@ -18,7 +18,7 @@ if(isset($_POST['reset_link'])){
             $code = generateRandomString();
     
             // Formulate the link
-            $link = 'href="http://localhost/reset_password.php?email='.$email.'&code='.$code.'"';
+            $link = 'href="http://localhost/ITIcafe/reset_password.php?email='.$email.'&code='.$code.'"';
             
             $link2 = '<span style="width:100%;"><a style="padding:10px 100px;border-radius:30px;background:#a8edbc;" '.$link.' > Link </a></span>';
     // echo $link; 

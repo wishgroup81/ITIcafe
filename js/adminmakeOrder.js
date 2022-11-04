@@ -23,7 +23,7 @@ cancel_btns.forEach((btn) => btn.addEventListener("click", cancelProduct));
 function cancelProduct() {
   const id = this.dataset.cancelId;
   console.log(id);
-  fetch(`http://localhost/adminmakeOrder.php?cancel-id=${id}`).then((data) => {
+  fetch(`http://localhost/ITIcafe/adminmakeOrder.php?cancel-id=${id}`).then((data) => {
     if (data) {
       let btn = document.querySelector(`button[data-cancel-id='${id}']`);
       btn.parentElement.parentElement.parentElement.remove();
@@ -36,7 +36,7 @@ increase_btns.forEach((btn) => btn.addEventListener("click", increaseAmount));
 function increaseAmount() {
   const id = this.dataset.increaseId;
 
-  fetch(`http://localhost/makeOrder.php?increase-id=${id}`).then((data) => {
+  fetch(`http://localhost/ITIcafe/makeOrder.php?increase-id=${id}`).then((data) => {
     if (data) {
       let btn = document.querySelector(`button[data-increase-id='${id}']`);
       let amount =
@@ -61,7 +61,7 @@ decrease_btns.forEach((btn) => btn.addEventListener("click", decreaseAmount));
 function decreaseAmount() {
   const id = this.dataset.decreaseId;
 
-  fetch(`http://localhost/makeOrder.php?decrease-id=${id}&amount=`).then(
+  fetch(`http://localhost/ITIcafe/makeOrder.php?decrease-id=${id}&amount=`).then(
     (data) => {
       if (data) {
         let btn = document.querySelector(`button[data-decrease-id='${id}']`);
