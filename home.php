@@ -1,4 +1,4 @@
-<!--------------------------------------- User Home ------------------------------->
+
 <?php
 session_start();
 if(isset($_SESSION['userId'])){
@@ -216,11 +216,15 @@ http://www.templatemo.com/tm-466-cafe-house
               </div> 
               </div>
             </div>
+
+          
+            
+            
         </div>
       </div>
     </section>
    <!-- JS -->
-   <script src="js/makeOrder.js"></script>
+   <script src="./js/makeOrder.js"></script>
    <script type="text/javascript" src="js/jquery-1.11.2.min.js"></script> <!-- jQuery -->
    <script type="text/javascript" src="js/templatemo-script.js"></script><!-- Templatemo Script -->
  </body>
@@ -230,4 +234,4 @@ http://www.templatemo.com/tm-466-cafe-house
 else {
   header("location:index.php");
 }
- ?>
+?>

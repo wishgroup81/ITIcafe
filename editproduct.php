@@ -1,5 +1,5 @@
 <?php
-include ('./connect.php');
+include ('connection.php');
 if(isset($_POST['update'])){
     $productid = $_POST['productid'];
     $name = $_POST['name'];
@@ -8,7 +8,7 @@ if(isset($_POST['update'])){
         $query = " UPDATE products 
         SET name=:name , img=:img , price=:price 
         WHERE id=:productid ";
-        $statement = $connect->prepare($query);
+        $statement = $con->prepare($query);
         $data = [
             ':name'=>$name,
             ':price'=>$price,

@@ -1,5 +1,5 @@
 <?php 
-require('conn.php');
+require('connection.php');
 session_start();
 
 if(isset($_GET['email']) && isset($_GET['code'])){
@@ -7,7 +7,7 @@ if(isset($_GET['email']) && isset($_GET['code'])){
     $code = $_GET['code'];
 
     // Check against the database to see if correct link
-    $query = $conn->prepare("SELECT * FROM reset WHERE email = ?");
+    $query = $con->prepare("SELECT * FROM reset WHERE email = ?");
     $query->execute([$_SESSION['email']]);
     $from_reset = $query->fetch();
 
@@ -34,7 +34,7 @@ if(isset($_POST['reset'])){
 
     // Update password
     if(empty($error)){
-        $query = $conn->prepare("UPDATE users SET password = ? WHERE email = ?");
+        $query = $con->prepare("UPDATE users SET password = ? WHERE email = ?");
         $query ->execute([$hashed_password, $email]);
 
         $msg = 'Successfully updated your password! <a class="btn btn-success" href="login.php"> >>Log In</a>';

@@ -1,8 +1,9 @@
 <?php
-require('./connect.php');
+require('connection.php');
+session_start();
+$id = $_SESSION["adminId"]; 
 $name = $_REQUEST['name'];
-$admin_id = $_REQUEST['admin_id'];
-$query = "INSERT INTO category (name,admin_id) VALUES ('$name','$admin_id')";
-$sql = $connect->prepare($query);
+$query = "INSERT INTO category (name,admin_id) VALUES ('$name','$id')";
+$sql = $con->prepare($query);
 $sql->execute();
 header('location:./addproductform.php');

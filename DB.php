@@ -1,6 +1,6 @@
 <?php
-     $db = "mysql:host=localhost;dbname=cafetaria";
-      $con = new PDO($db,'root','');
+      require_once 'connection.php';
+
 
 function getUsers(){
   global $con;

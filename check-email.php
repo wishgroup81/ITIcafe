@@ -1,13 +1,13 @@
 <?php
-include 'connect.php';
-include 'functions.php';
+  require_once 'connection.php';
+  include 'functions.php';
 
 
 if(isset($_POST['reset_link'])){
 
         $email = $_POST['email'];
         // Check if in the database
-        $query =$connect->prepare("SELECT email FROM users where email = ?");
+        $query =$con->prepare("SELECT email FROM users where email = ?");
         $query->execute([$email]);
         $row = $query->rowCount();
     
@@ -24,17 +24,17 @@ if(isset($_POST['reset_link'])){
     // echo $link; 
           
     
-            $query_exist =  $connect->prepare("SELECT * FROM reset where email = ?");
+            $query_exist =  $con->prepare("SELECT * FROM reset where email = ?");
             $query_exist->execute([$email]);
             $from_reset = $query_exist->fetch();
     
             if(empty($from_reset)){
                 // Save code and INSERT email in a database
-                $query_insert = $connect->prepare("INSERT INTO reset(email, code) VALUES (?, ?)");
+                $query_insert = $con->prepare("INSERT INTO reset(email, code) VALUES (?, ?)");
                 $query_insert->execute([$email, $code]);
             } else {
                 // Already exist reseting attempt, switch to UPDATE the reset table instead
-                $query_insert = $connect->prepare("UPDATE reset SET code = ? WHERE email = ?");
+                $query_insert = $con->prepare("UPDATE reset SET code = ? WHERE email = ?");
                 $query_insert->execute([$code, $email]);
             }
     

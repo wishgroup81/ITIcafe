@@ -1,8 +1,7 @@
 <?php
-    include('./connect.php');
     session_start();
-    if(isset($_SESSION['login_admin'])){ 
-
+    if (isset($_SESSION["adminId"])) {
+    include('connection.php');
 ?>
 
 <!DOCTYPE html>
@@ -18,21 +17,14 @@
     <link href='http://fonts.googleapis.com/css?family=Damion' rel='stylesheet' type='text/css'>
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/font-awesome.min.css" rel="stylesheet">
-    <link href="css/templatemo-style.css" rel="stylesheet">
-    <link 
-    rel="stylesheet" 
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" 
-    integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" 
-    crossorigin="anonymous">
+    <link href="./css/editStyle.css" rel="stylesheet">
     <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon" />
-    <link rel="stylesheet" href="./ibrahim/css/style.css">
-    <link rel="stylesheet" href="./css/editStyle.css">
 
 
 </head>
     <body>
-        <!-- Preloader -->
-        <div id="loader-wrapper">
+    <!-- Preloader -->
+    <div id="loader-wrapper">
         <div id="loader"></div>
         <div class="loader-section section-left"></div>
         <div class="loader-section section-right"></div>
@@ -43,21 +35,18 @@
             <div class="row">
                 <div class="tm-top-header-inner">
                     <div class="tm-logo-container">
-                        <img src="img/logo.png" alt="Logo" style="width: 50px; height: 50px;">
+                        <img src="img/logo.png" alt="Logo" class="tm-site-logo">
                         <h1 class="tm-site-name tm-handwriting-font">Cafe House</h1>
                     </div>
                     <div class="mobile-menu-icon">
                         <i class="fa fa-bars"></i>
                     </div>
-                    <nav class="tm-nav ">
-                        <ul class="nav ">
-                            <li><a href="./showproducts.php" class="active  nav-link">products</a></li>
-                            <li><a href="./showusers.php" class="nav-link" >users</a></li>
-                            <li><a href="./addproductform.php" class="nav-link">Add Product</a></li>
-                            <li><a href=".#"class="nav-link">manual</a></li>
-                            <li><a href="./ibrahim/index.php" class="nav-link">Show Orders</a></li>
-                            <li><a href="./esraa/menu.php" class="nav-link">checks</a></li>
-                            <li><a href="logout.php" class="nav-link">logout</a></li>
+                    <nav class="tm-nav">
+                        <ul>
+                            <li><a href="showusers.php" >Home</a></li>
+                            <li><a href="./showproducts.php" >products</a></li>
+                            <li><a href="./esraa/checks.php" >checks</a></li>
+                            <li><a href="logout.php" >logout</a></li>
                         </ul>
                     </nav>   
                 </div>           
@@ -71,7 +60,7 @@
     if(isset($_GET['id'])){
         $userid = $_GET['id'];
         $query= "SELECT name,img,number,ext FROM users,rooms WHERE users.id =:userid AND room_id=rooms.id";
-        $statement = $connect->prepare($query);
+        $statement = $con->prepare($query);
         $data = [':userid'=>$userid];
         $statement->execute($data);
         $result = $statement->fetch(PDO::FETCH_ASSOC);
@@ -100,19 +89,11 @@
             <label for="ext">Ext</label>
             <input type="number" min="1"  class="form-control" name="ext" value="<?php echo $ext; ?>">
         </div>
-        <button type="submit"class=" tm-more-button btn  btn-lg"  value="update" name="update">Edit</button>
+        <button type="submit"class="w-50 tm-more-button btn  btn-lg"  value="update" name="update">Edit</button>
     </form>
-
-    <script type="text/javascript" src="js/jquery-1.11.2.min.js"></script> <!-- jQuery -->
-    <script type="text/javascript" src="js/templatemo-script.js"></script><!-- Templatemo Script -->
-
-
 </body>
 </html>
 <?php 
- }
- else{
-   header('location:./adminlogin.php') ;
- } 
- die;
-?>
+}else {
+    header("location:adminlogin.php");
+}

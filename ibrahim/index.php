@@ -2,15 +2,14 @@
 session_start();
 if(isset($_SESSION['userId'])){
   $user=$_SESSION['userId'];
-require("./dataBaseInfo.php");
-$string = BD_TYPE .":host=".DB_HOST.";dbname=".DB_NAME.";";
-$db = new PDO($string,DB_USER,DB_PASSWD);
+  require_once '../connection.php';
+
 if (!empty($_REQUEST["to"])) {
     $to = ($_REQUEST['to']);
     $from = ($_REQUEST['from']);
     $que = "SELECT * FROM orders where user_id=$user
     AND (created_at BETWEEN '". $from ." 00:00:01' and '". $to ." 23:59:59' )  order by id DESC ";
-    $sql = $db->prepare($que);
+    $sql = $con->prepare($que);
     $sql->execute();
     $orders = $sql->fetchAll(PDO::FETCH_ASSOC);
 
@@ -18,7 +17,7 @@ if (!empty($_REQUEST["to"])) {
     $to = "2022-12-31";
     $from = "2022-1-1";
     $que = "SELECT * FROM orders where user_id=$user and (created_at BETWEEN '". $from ." 00:00:01' and '". $to ." 23:59:59') order by id DESC";
-    $sql = $db->prepare($que);
+    $sql = $con->prepare($que);
     $sql->execute();
     $orders = $sql->fetchAll(PDO::FETCH_ASSOC);
 }
@@ -115,7 +114,7 @@ $total = 0;
             if (!empty($_REQUEST['id'])){
                 $id = $_REQUEST['id'];
                 $query = "SELECT img, price from products where id in (SELECT product_id from orderproduct where order_id =$id) ";
-                $sql = $db->prepare($query);
+                $sql = $con->prepare($query);
                 $sql->execute();
                 $images = $sql->fetchAll(PDO::FETCH_ASSOC);
                 foreach($images as $img):?>

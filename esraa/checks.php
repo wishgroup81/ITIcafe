@@ -84,7 +84,7 @@ http://www.templatemo.com/tm-466-cafe-house
             <nav class="tm-nav">
               <ul>
                 <li><a href="../showusers.php">Home</a></li>
-                <li><a href="ckecks.php" class="active">Checks</a></li>
+                <li><a href="checks.php" class="active">Checks</a></li>
                 <li><a href="../logout.php">logout</a></li>
               </ul>
             </nav>   

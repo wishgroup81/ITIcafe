@@ -1,6 +1,6 @@
 <?php
 session_start();
-include("connect.php");
+require_once 'connection.php';
 $count='';
 $error="";
 if (!empty($_REQUEST)) {
@@ -8,7 +8,7 @@ if (!empty($_REQUEST)) {
    $pass = $_REQUEST['password'];
    $hashedpass=sha1($pass);
    $sql = "SELECT * from users where email ='$user_email' and password ='$pass' ";
-   $x = $connect->prepare($sql);
+   $x = $con->prepare($sql);
    $y= $x->execute();
    $count = $x->rowCount();
    if ($count == 1) {

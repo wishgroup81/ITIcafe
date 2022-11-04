@@ -1,20 +1,19 @@
 <?php
-require('./connect.php');
-
 session_start();
-    if(isset($_SESSION['login_admin'])){ 
-
+if (isset($_SESSION["adminId"])){
+require('connection.php');
 $query = "SELECT id,name,price,img,status FROM products ";
-$sql = $connect->prepare($query);
+$sql = $con->prepare($query);
 $sql->execute();
 $products = $sql->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
 
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
+    <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Cafe House</title>
@@ -22,15 +21,14 @@ $products = $sql->fetchAll(PDO::FETCH_ASSOC);
 
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,400italic,600,700' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Damion' rel='stylesheet' type='text/css'>
-    <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/font-awesome.min.css" rel="stylesheet">
     <link href="css/templatemo-style.css" rel="stylesheet">
+    <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon" />
     <link 
     rel="stylesheet" 
     href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" 
     integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" 
     crossorigin="anonymous">
-    <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon" />
     <link rel="stylesheet" href="./ibrahim/css/style.css">
 
 
@@ -57,11 +55,11 @@ $products = $sql->fetchAll(PDO::FETCH_ASSOC);
                     <nav class="tm-nav ">
                         <ul class="nav ">
                             <li><a href="./showproducts.php" class="active  nav-link">products</a></li>
-                            <li><a href="./showusers.php" class="nav-link" >users</a></li>
+                            <li><a href="./showusers.php" class="nav-link" >Users</a></li>
                             <li><a href="./addproductform.php" class="nav-link">Add Product</a></li>
-                            <li><a href=".#"class="nav-link">manual</a></li>
-                            <li><a href="./ibrahim/index.php" class="nav-link">Show Orders</a></li>
-                            <li><a href="./esraa/menu.php" class="nav-link">checks</a></li>
+                           
+                            <li><a href="./ibrahim/orders.php" class="nav-link">Show Orders</a></li>
+                            <li><a href="./esraa/checks.php" class="nav-link">checks</a></li>
                             <li><a href="logout.php" class="nav-link">logout</a></li>
                         </ul>
                     </nav>   
@@ -69,8 +67,6 @@ $products = $sql->fetchAll(PDO::FETCH_ASSOC);
             </div>    
         </div>
     </div>
-    <br>
-    <br>
     
     <section class="main-container">
         <h1>All products</h1>
@@ -105,10 +101,7 @@ $products = $sql->fetchAll(PDO::FETCH_ASSOC);
    <script type="text/javascript" src="js/templatemo-script.js"></script><!-- Templatemo Script -->
 </body>
 </html>
-
-<?php 
+<?php
+}else {
+    header("location:adminlogin.php");
 }
-else{
-header('location:./adminlogin.php') ;
-} 
-?>

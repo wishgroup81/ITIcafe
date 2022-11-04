@@ -1,13 +1,12 @@
 <?php
 session_start();
 if (isset($_SESSION["adminId"])) {
-require("./dataBaseInfo.php");
-$string = BD_TYPE .":host=".DB_HOST.";dbname=".DB_NAME.";";
-$db = new PDO($string,DB_USER,DB_PASSWD);
+  require_once '../connection.php';
+
 $query = "SELECT created_at, name, orders.room_id as Room, ext, status, orders.id from orders
             inner join rooms on orders.room_id = rooms.id
             inner join users on orders.user_id = users.id ";
-$sql = $db->prepare($query);
+$sql = $con->prepare($query);
 $sql->execute();
 $orders = $sql->fetchAll(PDO::FETCH_ASSOC);
 ?>
@@ -85,7 +84,7 @@ $orders = $sql->fetchAll(PDO::FETCH_ASSOC);
                     $query2 = "SELECT * from products 
                         inner join orderproduct on products.id = orderproduct.product_id
                         inner join orders where orders.id =$order_id";  
-                    $sql = $db->prepare($query2);
+                    $sql = $con->prepare($query2);
                     $sql->execute();
                     $imagesO = $sql->fetchAll(PDO::FETCH_ASSOC);
                     foreach($imagesO as $pro):

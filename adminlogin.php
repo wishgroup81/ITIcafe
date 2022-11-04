@@ -1,6 +1,7 @@
 <?php
 session_start();
-include("connect.php");
+require_once 'connection.php';
+
 $count='';
 $error="";
 
@@ -9,14 +10,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
    $pass = $_POST['password'];
    $hashedpass=sha1($pass);
    $sql = 'SELECT * from admin where email =? and password= ? ';
-   $stmt = $connect->prepare($sql);
+   $stmt = $con->prepare($sql);
    $stmt->execute(array($user_email, $pass));
    $count = $stmt->rowCount();
    if ($count == 1) {
       $y = $stmt->fetchAll(PDO::FETCH_ASSOC);
       $admin = $y[0]["id"];
       $_SESSION['adminId'] = $admin; 
-      header("location: showusers.php");
+      header("location:showusers.php");
+
    } else {
       $error = "Your Login Email or Password is invalid";
    }

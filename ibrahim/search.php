@@ -1,7 +1,5 @@
 <?php
-require("./dataBaseInfo.php");
-$string = BD_TYPE .":host=".DB_HOST.";dbname=".DB_NAME.";";
-$db = new PDO($string,DB_USER,DB_PASSWD);
+  require_once '../connection.php';
 if (!empty($_REQUEST)) {
     $to =($_REQUEST['to']);
     $from =($_REQUEST['from']);
